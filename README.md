@@ -17,3 +17,5 @@ A basic ROS2 package that has a publisher with a custom message "Hello ENPM700!"
 # Run instructions:
 1. Source setup files: . install/setup.bash
 2. Run the publisher node: ros2 run beginner_tutorials talker
+
+![Publisher Output](./publisher_output.png)
