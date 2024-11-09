@@ -18,10 +18,20 @@ class MinimalPublisher : public rclcpp::Node {
  public:
   MinimalPublisher() : Node("minimal_publisher"), count_(0) {
 
+    // Declare the parameter
+    this->declare_parameter("publish_frequency", 1.0);  // Default value 1 Hz
+
+    // Retrieve the parameter value
+    double publish_frequency;
+    this->get_parameter("publish_frequency", publish_frequency);
+
+    // Convert frequency to milliseconds
+    auto timer_period = std::chrono::milliseconds(static_cast<int>(1000 / publish_frequency));
+
     publisher_ = this->create_publisher<std_msgs::msg::String>("topic", 10);
 
     timer_ = this->create_wall_timer(
-        500ms, std::bind(&MinimalPublisher::timer_callback, this));
+        timer_period, std::bind(&MinimalPublisher::timer_callback, this));
 
     if(count_ > 10000)
       RCLCPP_FATAL(this->get_logger(), "Node running for too long asynchronously!");
