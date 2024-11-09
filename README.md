@@ -33,8 +33,8 @@ Note: If an empty message is passed, the node will generate an ERROR log message
 
 # RESULTS:
 
-![Publisher Output](.results/publisher_output.png)
+![Publisher Output](results/publisher_output.png)
 
-![Launch file Output](.results/launch_output.png)
+![Launch file Output](results/launch_output.png)
 
-![RQT Output](.results/rqt_output.png)
+![RQT Output](results/rqt_output.png)
