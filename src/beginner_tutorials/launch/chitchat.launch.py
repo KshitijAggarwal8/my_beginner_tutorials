@@ -17,7 +17,14 @@ def generate_launch_description():
     default_value='1.0',  # Default value if not provided
     description='Publish frequency for the talker node'
     )
-        
+
+    # Argument to enable or disable the ROS bag recorder node
+    enable_rosbag_arg = DeclareLaunchArgument(
+        'enable_rosbag',
+        default_value='true',  # Default value is not-enabled
+        description='Flag to enable or disable the ROS bag recorder node'
+    )
+
     talker_node = Node(
         package="beginner_tutorials",
         executable="talker",
@@ -28,4 +35,15 @@ def generate_launch_description():
         package="beginner_tutorials",
         executable="listener",
     )
-    return LaunchDescription([publish_freq_arg, talker_node, listener_node])
+
+    rosbag_node = Node(
+        package="beginner_tutorials",
+        executable="bag_recorder",
+        parameters=[{"enable_rosbag": LaunchConfiguration('enable_rosbag')}]
+    )
+
+    return LaunchDescription([publish_freq_arg, 
+                              enable_rosbag_arg,
+                              talker_node, 
+                              listener_node, 
+                              rosbag_node])

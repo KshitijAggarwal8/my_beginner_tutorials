@@ -19,6 +19,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(catch_ros2 REQUIRED )
+find_package(rosbag2_cpp REQUIRED)
 
 # # Enable testing
 # enable_testing()
@@ -80,6 +81,13 @@ ament_target_dependencies(talker
 add_executable(listener src/subscriber_member_function.cpp)
 ament_target_dependencies(listener rclcpp std_msgs)
 
+add_executable(bag_recorder src/bag_recorder.cpp)
+ament_target_dependencies(bag_recorder rclcpp rosbag2_cpp std_msgs)
+
+install(TARGETS
+  bag_recorder
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 ament_target_dependencies(integration_test_node
   rclcpp std_srvs std_msgs
