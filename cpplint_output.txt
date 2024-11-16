@@ -1,3 +1,0 @@
-Done processing src/beginner_tutorials/src/bag_recorder.cpp
-Done processing src/beginner_tutorials/src/publisher_member_function.cpp
-Done processing src/beginner_tutorials/src/subscriber_member_function.cpp
