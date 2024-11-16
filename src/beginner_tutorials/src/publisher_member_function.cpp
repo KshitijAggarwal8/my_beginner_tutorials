@@ -34,6 +34,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "beginner_tutorials/srv/set_string.hpp"
+#include "tf2_ros/static_transform_broadcaster.h"
+#include "geometry_msgs/msg/transform_stamped.hpp"
 
 
 using std::chrono_literals::operator""ms;
@@ -66,6 +68,14 @@ class MinimalPublisher : public rclcpp::Node {
       RCLCPP_FATAL(this->get_logger(),
                       "Node running for too long asynchronously!");
 
+    // Initialize the static transform broadcaster
+    static_broadcaster_ =
+    std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
+
+    // Broadcast the static transform
+    broadcast_static_transform();
+
+
 
  /**
 * @brief Service to dynamically update the string message being published
@@ -91,6 +101,30 @@ class MinimalPublisher : public rclcpp::Node {
     publisher_->publish(message);
   }
 
+  void broadcast_static_transform() {
+    geometry_msgs::msg::TransformStamped transform_stamped;
+
+    transform_stamped.header.stamp = this->get_clock()->now();
+    transform_stamped.header.frame_id = "world";
+    transform_stamped.child_frame_id = "talk";
+
+    // Set translation
+    transform_stamped.transform.translation.x = 1.0;
+    transform_stamped.transform.translation.y = 2.0;
+    transform_stamped.transform.translation.z = 3.0;
+
+    // Set rotation (in quaternion form)
+    transform_stamped.transform.rotation.x = 0.0;
+    transform_stamped.transform.rotation.y = 0.0;
+    transform_stamped.transform.rotation.z = 0.0;
+    transform_stamped.transform.rotation.w = 1.0;
+
+    // Broadcast the transform
+    static_broadcaster_->sendTransform(transform_stamped);
+    RCLCPP_INFO(this->get_logger(),
+    "Static transform broadcasted from 'world' to 'base_link'");
+  }
+
 /**
 * @brief Updating the message with the request received via service
 */
@@ -113,6 +147,7 @@ class MinimalPublisher : public rclcpp::Node {
 
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+  std::shared_ptr<tf2_ros::StaticTransformBroadcaster> static_broadcaster_;
   rclcpp::Service<beginner_tutorials::srv::SetString>::SharedPtr service_;
   size_t count_;
 };

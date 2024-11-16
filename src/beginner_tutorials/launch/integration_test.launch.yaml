@@ -1,0 +1,28 @@
+# A simple launch file for catch2 tests for ROS2 framework
+
+launch:
+
+# Tag for the launch file
+- catch2_launch_file:
+    description: 'An example Catch2 integration test launch file'
+
+
+# Some launch arguments can also be included if/when needed
+- arg:
+    name: 'test_duration'
+    default: '5.0'
+    description: 'Max length of test in seconds.'
+
+#Auxiliary "talker" node being tested   
+- node:
+    pkg: 'beginner_tutorials'
+    exec: 'talker'    
+    
+#Integration test node
+- catch2_integration_test_node:
+    pkg: 'beginner_tutorials'
+    exec: 'integration_test_node'
+    param:
+    -
+      name: 'test_duration'
+      value: '$(var test_duration)'
