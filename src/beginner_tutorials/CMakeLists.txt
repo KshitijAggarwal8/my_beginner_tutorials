@@ -21,11 +21,8 @@ find_package(tf2 REQUIRED)
 find_package(catch_ros2 REQUIRED )
 find_package(rosbag2_cpp REQUIRED)
 
-# # Enable testing
-# enable_testing()
 
 if(BUILD_TESTING)
-  # include(CTest)
 
   # disable these built-in tests
   set(ament_cmake_lint_cmake_FOUND TRUE)
@@ -34,9 +31,7 @@ if(BUILD_TESTING)
   set(ament_cmake_flake8_FOUND TRUE)
   set(ament_cmake_uncrustify_FOUND TRUE)
 
-  ###############
-  ## UNIT TEST ##
-  ###############
+
   add_executable(integration_test_node
     test/integration_test_node.cpp
   )
@@ -54,11 +49,7 @@ if(BUILD_TESTING)
     DESTINATION lib/${PROJECT_NAME}
   )
 
-  ######################################
-  ## 2.) ADD INTEGRATION TEST SUPPORT ##
-  ######################################
-  # This CMake function allows the integration test to be run
-  # when running "colcon test".
+  #Integration test support launch file
   catch_ros2_add_integration_test (ExampleIntegration_TestYAML
     LAUNCH_FILE integration_test.launch.yaml  # example in YAML
     )
@@ -99,7 +90,6 @@ rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} rosidl_typesupport_cpp)
 
 target_link_libraries(talker "${cpp_typesupport_target}")
-# target_link_libraries(listener "${cpp_typesupport_target}")
 
 
 install(TARGETS

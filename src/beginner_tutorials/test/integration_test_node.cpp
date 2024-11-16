@@ -1,17 +1,30 @@
-// Copyright 2023 Nick Morales.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
+/**
+* @file integration_test_node.cpp
+* @author Kshitij Aggarwal - 119211618
+* @brief
+* @version 0.1
+* @date 2024-11-15
+*
+* @copyright Copyright (c) 2024 Kshitij Aggarwal
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+*
+*/
 
 #include <catch_ros2/catch_ros2.hpp>
 #include <chrono>
@@ -34,20 +47,13 @@ class MyTestsFixture {
 public:
   MyTestsFixture () 
   {
-    /**
-     * 1.) Create the node that performs the test. (aka Integration test node):
-     */
+    // Create the node that performs the test. (aka Integration test node):
+
     testerNode = rclcpp::Node::make_shared ("IntegrationTestNode1");
     Logger = testerNode->get_logger(); // make sure message will appear in rqt_console
 
-    /**
-     * 2.) Declare a parameter for the duration of the test:
-     */
     testerNode->declare_parameter<double> ("test_duration");
 
-    /**
-     * 3.) Get the test duration value:
-     */
     TEST_DURATION = testerNode->get_parameter("test_duration").get_parameter_value().get<double>();
     RCLCPP_INFO_STREAM (Logger, "Got test_duration =" << TEST_DURATION);
   }
@@ -61,23 +67,12 @@ protected:
   rclcpp::Node::SharedPtr testerNode;
 };
 
-
-////////////////////////////////////////////////
-// Test Case 2
-////////////////////////////////////////////////
-
-/* In this test case, the node under test (aka Auxiliary test node)
-   is a topic talker, which got launched by the launcher.
-   
-   We will ceate a topic listener as part of the node performing the
-   test (aka Integration test node).  And the test simply checks if
-   the topic is recieved within the duration of the test. */
+/* A simple test case to test if the node 'talker' 
+   is able to publish to the topic '/topic'     */
 
 TEST_CASE_METHOD (MyTestsFixture, "test topic talker", "[topic]") {
 
-  /**
-   * 4.) Now, subscribe to a specific topic we're looking for:
-   */
+  //subscribe to a specific topic we're looking for:
   bool got_topic = false;
 
   // Define a callback that captures the additional parameter
@@ -93,9 +88,6 @@ TEST_CASE_METHOD (MyTestsFixture, "test topic talker", "[topic]") {
 
   auto subscriber = testerNode->create_subscription<String> ("topic", 10, ListenerCallback (got_topic));
 
-  /**
-   * 5.) Finally do the actual test:
-   */
   rclcpp::Rate rate(10.0);       // 10hz checks
   auto start_time = rclcpp::Clock().now();
   auto duration   = rclcpp::Clock().now() - start_time;

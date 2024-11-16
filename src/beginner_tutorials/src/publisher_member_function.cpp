@@ -69,7 +69,8 @@ class MinimalPublisher : public rclcpp::Node {
                       "Node running for too long asynchronously!");
 
     // Initialize the static transform broadcaster
-    static_broadcaster_ = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
+    static_broadcaster_ =
+    std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
 
     // Broadcast the static transform
     broadcast_static_transform();
@@ -120,7 +121,8 @@ class MinimalPublisher : public rclcpp::Node {
 
     // Broadcast the transform
     static_broadcaster_->sendTransform(transform_stamped);
-    RCLCPP_INFO(this->get_logger(), "Static transform broadcasted from 'world' to 'base_link'");
+    RCLCPP_INFO(this->get_logger(),
+    "Static transform broadcasted from 'world' to 'base_link'");
   }
 
 /**

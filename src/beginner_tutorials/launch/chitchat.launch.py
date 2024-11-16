@@ -21,7 +21,7 @@ def generate_launch_description():
     # Argument to enable or disable the ROS bag recorder node
     enable_rosbag_arg = DeclareLaunchArgument(
         'enable_rosbag',
-        default_value='true',  # Default value is not-enabled
+        default_value='false',  # Default value is not-enabled
         description='Flag to enable or disable the ROS bag recorder node'
     )
 
